@@ -1,0 +1,399 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── CSS Custom Properties ─────────────────────────── */
+:root {
+  --bg: #050505;
+  --bg-2: #080808;
+  --bg-3: #0B0B0B;
+  --accent: #00d4ff;
+  --accent-dim: rgba(0, 212, 255, 0.25);
+  --accent-glow: rgba(0, 212, 255, 0.12);
+  --glass-bg: rgba(255, 255, 255, 0.045);
+  --glass-bg-strong: rgba(255, 255, 255, 0.075);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-border-strong: rgba(255, 255, 255, 0.14);
+  --glass-highlight: rgba(255, 255, 255, 0.06);
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-secondary: rgba(255, 255, 255, 0.55);
+  --text-muted: rgba(255, 255, 255, 0.3);
+  --font-mono: 'Space Mono', monospace;
+  --font-sans: 'Inter', sans-serif;
+  --spotlight-x: 50%;
+  --spotlight-y: 50%;
+}
+
+/* ─── Base Reset ─────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--glass-border) transparent;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Glass System ───────────────────────────────────── */
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  position: relative;
+}
+
+.glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    var(--glass-highlight) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+}
+
+.glass-strong {
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--glass-border-strong);
+  backdrop-filter: blur(30px) saturate(160%);
+  -webkit-backdrop-filter: blur(30px) saturate(160%);
+}
+
+.glass-nav {
+  background: rgba(8, 8, 8, 0.75);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+}
+
+/* Top edge illumination */
+.glass-top-edge::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  pointer-events: none;
+}
+
+/* ─── Marquee ────────────────────────────────────────── */
+.marquee-container {
+  overflow: hidden;
+  width: 100%;
+  pointer-events: none;
+  user-select: none;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 35s linear infinite;
+  will-change: transform;
+}
+
+.marquee-track-reverse {
+  display: flex;
+  width: max-content;
+  animation: marquee-reverse 40s linear infinite;
+  will-change: transform;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes marquee-reverse {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+/* ─── Arc Reactor Spotlight ──────────────────────────── */
+.arc-spotlight {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(
+    600px circle at var(--spotlight-x) var(--spotlight-y),
+    rgba(0, 212, 255, 0.04) 0%,
+    rgba(0, 180, 220, 0.02) 30%,
+    transparent 70%
+  );
+}
+
+/* ─── Vapor Text Animation ───────────────────────────── */
+@keyframes vaporize-out {
+  0% { opacity: 1; filter: blur(0px); transform: translateY(0) scale(1); }
+  100% { opacity: 0; filter: blur(14px); transform: translateY(-28px) scale(1.06); }
+}
+
+@keyframes appear-in {
+  0% { opacity: 0; filter: blur(10px); transform: translateY(20px) scale(0.97); }
+  100% { opacity: 1; filter: blur(0px); transform: translateY(0) scale(1); }
+}
+
+.vapor-out {
+  animation: vaporize-out 0.5s ease-out forwards;
+}
+
+.vapor-in {
+  animation: appear-in 0.6s ease-out forwards;
+}
+
+/* ─── Face Reveal — now handled by Framer Motion in Hero.tsx ── */
+/* Legacy .face-reveal class kept for other uses */
+.face-reveal {
+  /* handled in component */
+}
+
+
+/* ─── Pulse Glow ─────────────────────────────────────── */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.08); }
+}
+
+.pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* ─── Float ──────────────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.float {
+  animation: float 5s ease-in-out infinite;
+}
+
+/* ─── Arc Reactor Ring ───────────────────────────────── */
+@keyframes arc-ring {
+  0% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.15); opacity: 0.2; }
+  100% { transform: scale(1); opacity: 0.5; }
+}
+
+.arc-ring {
+  animation: arc-ring 2.5s ease-in-out infinite;
+}
+
+/* ─── Particle Drift ─────────────────────────────────── */
+@keyframes drift {
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 0.4; }
+  100% { transform: translateY(-80px) translateX(20px); opacity: 0; }
+}
+
+/* ─── Section Fade Up ────────────────────────────────── */
+@keyframes fade-up {
+  0% { opacity: 0; transform: translateY(40px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up {
+  animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--glass-border);
+  border-radius: 2px;
+}
+
+/* ─── Selection ──────────────────────────────────────── */
+::selection {
+  background: rgba(0, 212, 255, 0.2);
+  color: var(--text-primary);
+}
+
+/* ─── Focus States ───────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ─── Reduced Motion ─────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track,
+  .marquee-track-reverse {
+    animation: none;
+  }
+  .face-reveal {
+    animation: none;
+    clip-path: none;
+    filter: none;
+  }
+  .float,
+  .pulse-glow,
+  .arc-ring,
+  .vapor-in,
+  .vapor-out {
+    animation: none;
+  }
+  .arc-spotlight {
+    display: none;
+  }
+}
+
+/* ─── Utility Classes ────────────────────────────────── */
+.font-display {
+  font-family: var(--font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.text-accent {
+  color: var(--accent);
+}
+
+.glow-accent {
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+}
+
+.border-accent-glow {
+  box-shadow: 0 0 20px var(--accent-glow), inset 0 0 20px var(--accent-glow);
+}
+
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ─── Certificate Carousel ───────────────────────────── */
+.cert-carousel {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+/* ─── Expanding Card ─────────────────────────────────── */
+.project-cards-row {
+  display: flex;
+  height: 480px;
+  gap: 2px;
+}
+
+.project-card {
+  flex: 1;
+  transition: flex 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  min-width: 60px;
+  overflow: hidden;
+  position: relative;
+  border-right: 1px solid var(--glass-border);
+}
+
+.project-card:hover,
+.project-card.expanded {
+  flex: 5;
+}
+
+/* ─── Skill Title Grid ───────────────────────────────── */
+.skills-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.skills-horizontal {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  white-space: nowrap;
+  will-change: transform;
+  padding: 0 4rem;
+}
+
+/* ─── macOS Dock ─────────────────────────────────────── */
+.dock-icon {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.dock-icon:hover {
+  transform: translateY(-12px) scale(1.35);
+}
+
+/* ─── Arc Reactor Ignore ─────────────────────────────── */
+.arc-reactor-ignore {
+  isolation: isolate;
+}
+
+/* ─── Glass Placeholder ──────────────────────────────── */
+.asset-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.02) 10px,
+    transparent 10px,
+    transparent 20px
+  );
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+}
+
+/* ─── Dot-Matrix Typography Enhancement ────────────────── */
+/* Applies Nothing Phone-style dot-matrix feel across all mono text */
+.font-display {
+  font-family: var(--font-mono) !important;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  -webkit-font-smoothing: antialiased;
+}
+
+.dot-matrix-glow {
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.4), 0 0 60px rgba(0, 212, 255, 0.12);
+}
+
+/* Section labels */
+.section-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0.65;
+}
+
+/* ─── Hero face cursor passthrough ─────────────────────── */
+.hero-face,
+.hero-face * {
+  cursor: none;
+}
